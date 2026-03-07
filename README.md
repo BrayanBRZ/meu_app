@@ -1,17 +1,18 @@
-# meu_app
+# Configuração do Ambiente Flutter
 
-A new Flutter project.
+## 📌 Descrição
 
-## Getting Started
+Esta atividade teve como objetivo configurar o ambiente de desenvolvimento Flutter e executar um projeto padrão em diferentes plataformas. Durante o processo foram realizados testes no emulador Android, na Web e em um dispositivo físico, além da análise da estrutura básica de um projeto Flutter.
 
-This project is a starting point for a Flutter application.
+Também foi realizada a gravação de um vídeo técnico demonstrando todas as etapas da atividade.
 
-A few resources to get you started if this is your first Flutter project:
+https://drive.google.com/file/d/1jRE65p4n_9Fnnv9KZwkQBpvlaaJhmrJf/view?usp=sharing
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🛠️ Etapas Realizadas
+
+1. Instalação e configuração do **Flutter SDK**.
+2. Instalação do **Visual Studio Code** com as extensões **Flutter** e **Dart**.
+3. Execução do comando `flutter doctor` para verificar a instalação.
+4. Criação de um projeto Flutter padrão.
