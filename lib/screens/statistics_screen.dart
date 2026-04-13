@@ -37,7 +37,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
                     height: MediaQuery.of(context).size.width * 0.16,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Text('Matérias')],
+                      children: [Text('Estátisticas')],
                     ),
                   ),
                 ),
@@ -46,7 +46,7 @@ class StatisticsScreenState extends State<StatisticsScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNav(currentIndex: 2),
+      bottomNavigationBar: BottomNav(currentIndex: 3),
     );
   }
 }
