@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meu_app/models/task.dart';
+import 'package:meu_app/data/models/task.dart';
 
 class Subject {
   final String id;
