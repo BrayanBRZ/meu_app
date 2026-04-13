@@ -12,9 +12,8 @@ class TaskCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 8, bottom: 8),
       child: FloatingCard(
-        // padding: const EdgeInsets.symmetric(horizontal: 16),
         child: tasks.isEmpty
-            ? Center(
+            ? const Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -23,9 +22,10 @@ class TaskCard extends StatelessWidget {
                       size: 30,
                       color: Colors.black26,
                     ),
+                    SizedBox(height: 8),
                     Text(
                       'Nenhuma tarefa para este dia',
-                      style: TextStyle(color: Colors.black, fontSize: 15),
+                      style: TextStyle(color: Colors.black45, fontSize: 15),
                     ),
                   ],
                 ),
@@ -35,16 +35,26 @@ class TaskCard extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   final task = tasks[index];
+                  final today = DateTime.now();
                   final daysLeft = task.normalizedDate
-                      .difference(DateTime.now())
+                      .difference(DateTime(today.year, today.month, today.day))
                       .inDays;
 
                   final String daysLabel;
+                  final Color labelColor;
                   if (daysLeft < 0) {
-                    daysLabel = 'Vencida há ${daysLeft.abs()} dias';
+                    daysLabel =
+                        'Vencida há ${daysLeft.abs()} dia${daysLeft.abs() == 1 ? '' : 's'}';
+                    labelColor = Colors.red.shade400;
+                  } else if (daysLeft == 0) {
+                    daysLabel = 'Vence hoje';
+                    labelColor = Colors.orange.shade600;
                   } else {
-                    daysLabel = '$daysLeft dias restantes';
+                    daysLabel =
+                        '$daysLeft dia${daysLeft == 1 ? '' : 's'} restantes';
+                    labelColor = Colors.black54;
                   }
+
                   return Padding(
                     padding: const EdgeInsets.only(
                       top: 16,
@@ -55,10 +65,13 @@ class TaskCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       height: MediaQuery.of(context).size.width * 0.16,
                       child: GestureDetector(
-                        onTap: () => Navigator.pushReplacementNamed(context, '/task/edit'),
+                        onTap: () => Navigator.pushNamed(
+                          context,
+                          '/task/detail',
+                          arguments: task,
+                        ),
                         child: Row(
                           children: [
-                            // Ícone
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
@@ -72,7 +85,6 @@ class TaskCard extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 12),
-                            // Nome — trunca com "..." se ultrapassar
                             Expanded(
                               child: Text(
                                 task.title,
@@ -80,19 +92,14 @@ class TaskCard extends StatelessWidget {
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14,
                                 ),
-                                overflow:
-                                    TextOverflow.ellipsis, // ✅ "..." no final
+                                overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ),
                             ),
                             const SizedBox(width: 8),
-                            // Dias restantes — tamanho fixo para não deslocar
                             Text(
                               daysLabel,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: Colors.black54,
-                              ),
+                              style: TextStyle(fontSize: 12, color: labelColor),
                             ),
                           ],
                         ),
