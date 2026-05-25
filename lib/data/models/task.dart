@@ -18,43 +18,37 @@ enum TaskType {
 }
 
 class Task {
-  final String id;
+  String id;
   String title;
   String description;
   TaskType type;
   DateTime currentDate;
-  List<Subject> subjects;
+  String subjectId;
 
-  Task(
-    this.id,
-    this.title,
-    this.description,
-    this.type,
-    this.currentDate,
-    this.subjects,
+  Task({
+    required this.id,
+    required this.title,
+    required this.description,
+    required this.type,
+    required this.currentDate,
+    required this.subjectId,
+  });
+
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'title': title,
+    'description': description,
+    'type': type.name,
+    'currentDate': currentDate.toIso8601String(),
+    'subjectId': subjectId,
+  };
+
+  factory Task.fromMap(Map<String, dynamic> map) => Task(
+    id: map['id'],
+    title: map['title'],
+    description: map['description'],
+    type: TaskType.values.byName(map['type']),
+    currentDate: DateTime.parse(map['currentDate']),
+    subjectId: map['subjectId'],
   );
-
-  // Getters
-
-  String get labelType => type.label;
-
-  int get remainingDays => currentDate.difference(DateTime.now()).inDays;
-
-  // Business Rules
-
-  DateTime get normalizedDate =>
-      DateTime(currentDate.year, currentDate.month, currentDate.day);
-
-  void remarkDate(DateTime newDate) => currentDate = newDate;
-
-  void addSubject(Subject subject) {
-    if (!subjects.contains(subject)) subjects.add(subject);
-  }
-
-  void disconnectSubject(Subject subject) {
-    subjects.remove(subject);
-  }
-
-  String formattedDate(DateTime date) =>
-      '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
 }

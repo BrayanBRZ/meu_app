@@ -1,19 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:meu_app/data/models/task.dart';
 
 class Subject {
-  final String id;
+  String id;
   String name;
-  Color color = const Color.fromARGB(255, 124, 21, 192);
-  List<Task> relatedTasks;
+  Color color;
+  String teacherId; // FK
+  String semesterId; // FK
 
   Subject({
-    required this.id, 
+    required this.id,
     required this.name,
     required this.color,
-    List<Task>? relatedTasks,
-  }) : relatedTasks = relatedTasks ?? [];
+    required this.teacherId,
+    required this.semesterId,
+  });
 
-  // Getters
-  String get symbol => name[0].toUpperCase();
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'name': name,
+    'color': color.value,
+    'teacherId': teacherId,
+    'semesterId': semesterId,
+  };
+
+  factory Subject.fromMap(Map<String, dynamic> map) => Subject(
+    id: map['id'],
+    name: map['name'],
+    color: Color(map['color'] as int),
+    teacherId: map['teacherId'],
+    semesterId: map['semesterId'],
+  );
 }
