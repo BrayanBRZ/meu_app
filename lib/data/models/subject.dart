@@ -4,8 +4,8 @@ class Subject {
   String id;
   String name;
   Color color;
-  String teacherId; // FK
-  String semesterId; // FK
+  String teacherId;
+  String semesterId;
 
   Subject({
     required this.id,
@@ -18,7 +18,7 @@ class Subject {
   Map<String, dynamic> toMap() => {
     'id': id,
     'name': name,
-    'color': color.value,
+    'color': color.toARGB32(),
     'teacherId': teacherId,
     'semesterId': semesterId,
   };

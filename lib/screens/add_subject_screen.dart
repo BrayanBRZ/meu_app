@@ -13,7 +13,7 @@ class AddSubjectScreen extends StatefulWidget {
 class _AddSubjectScreenState extends State<AddSubjectScreen> {
   final _nameController = TextEditingController();
   final _teacherController = TextEditingController();
-  int _selectedColorIndex = 0;
+  final int _selectedColorIndex = 0;
 
   // final List<Color> _colors = [
   //   const Color(0xFF9C27B0), // Roxo

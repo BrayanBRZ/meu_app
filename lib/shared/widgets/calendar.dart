@@ -89,8 +89,8 @@ class CalendarState extends State<Calendar> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                Colors.black.withOpacity(0.25),
-                                Colors.black.withOpacity(0.65),
+                                Colors.black.withValues(alpha: 0.25),
+                                Colors.black.withValues(alpha: 0.65),
                               ],
                               // Você pode ajustar onde o gradiente troca de cor (0.0 a 1.0)
                               stops: const [0.0, 1.0],
@@ -101,7 +101,7 @@ class CalendarState extends State<Calendar> {
                             // --- 3. A BORDA BRILHANTE (EFETIVA "BORDA DE VIDRO") ---
                             border: Border.all(
                               // Usamos branco brilhante, mas com transparência
-                              color: Colors.black.withOpacity(0.15),
+                              color: Colors.black.withValues(alpha: 0.15),
                               width:
                                   1.0, // Borda um pouco mais grossa para destacar
                             ),
@@ -110,7 +110,7 @@ class CalendarState extends State<Calendar> {
                             // Adiciona um brilho interno sutil
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.white.withOpacity(0.1),
+                                color: Colors.white.withValues(alpha: 0.1),
                                 offset: const Offset(-2, -2),
                                 blurRadius: 10,
                                 spreadRadius: -2,

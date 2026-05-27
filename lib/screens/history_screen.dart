@@ -85,19 +85,19 @@ class _HistoryScreenState extends State<HistoryScreen> {
                     end: Alignment.bottomCenter,
                     colors: isSelected
                         ? [
-                            Colors.black.withOpacity(0.25),
-                            Colors.black.withOpacity(0.65),
+                            Colors.black.withValues(alpha: 0.25),
+                            Colors.black.withValues(alpha: 0.65),
                           ]
                         : [
-                            Colors.black.withOpacity(0.05),
-                            Colors.black.withOpacity(0.15),
+                            Colors.black.withValues(alpha: 0.05),
+                            Colors.black.withValues(alpha: 0.15),
                           ],
                   ),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
                     color: isSelected
-                        ? Colors.black.withOpacity(0.15)
-                        : Colors.black.withOpacity(0.05),
+                        ? Colors.black.withValues(alpha: 0.15)
+                        : Colors.black.withValues(alpha: 0.05),
                     width: 1.0,
                   ),
                 ),

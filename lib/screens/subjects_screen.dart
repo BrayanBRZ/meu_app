@@ -48,7 +48,7 @@ class SubjectScreenState extends State<SubjectScreen> {
                           padding: const EdgeInsets.only(
                               top: 12, bottom: 0),
                           itemCount: _subjects.length,
-                          separatorBuilder: (_, __) => const Divider(
+                          separatorBuilder: (_, _) => const Divider(
                             height: 1,
                             indent: 64,
                             endIndent: 16,
@@ -99,7 +99,7 @@ class SubjectScreenState extends State<SubjectScreen> {
                               borderRadius: BorderRadius.circular(16),
                               boxShadow: [
                                 BoxShadow(
-                                  color: Colors.purple.withOpacity(0.3),
+                                  color: Colors.purple.withValues(alpha: 0.3),
                                   blurRadius: 12,
                                   offset: const Offset(0, 4),
                                 ),

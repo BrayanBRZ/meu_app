@@ -11,8 +11,8 @@ class SettingScreen extends StatefulWidget {
 }
 
 class SettingScreenState extends State<SettingScreen> {
-  bool _notificationsEnabled = true;
-  bool _darkModeEnabled = false;
+  final bool _notificationsEnabled = true;
+  final bool _darkModeEnabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -197,7 +197,7 @@ class SettingScreenState extends State<SettingScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: const Color(0xFF9C27B0),
+            activeThumbColor: const Color(0xFF9C27B0),
           ),
         ],
       ),
