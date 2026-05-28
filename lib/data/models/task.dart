@@ -1,5 +1,4 @@
-import 'package:meu_app/data/enum/regularity.dart';
-import 'package:meu_app/data/models/reminder.dart';
+import 'package:meu_app/data/enums/regularity.dart';
 
 class Task {
   final String? id;
@@ -8,7 +7,7 @@ class Task {
   final DateTime targetDate;
   final String tagId;
   final String subjectId;
-  final Reminder? reminderId;
+  final String? reminderId;
   final String? description;
 
   Task({
@@ -21,39 +20,39 @@ class Task {
     this.reminderId,
     String? description,
   }) : title = title.trim(),
-       description = description?.trim() {
-    if (this.title.isEmpty) {
-      throw ArgumentError('Título é obrigatório.');
-    }
+       description = description?.trim();
 
-    if (tagId.trim().isEmpty) {
-      throw ArgumentError('Tag é obrigatória.');
-    }
+  factory Task.fromMap(Map<String, dynamic> map) => Task(
+    id: map['id'] as String,
+    title: map['title'] as String,
+    regularity: Regularity.values.byName(map['regularity'] as String),
+    targetDate: DateTime.parse(map['targetDate'] as String),
+    tagId: map['tagId'] as String,
+    subjectId: map['subjectId'] as String,
+    reminderId: map['reminderId'] as String,
+    description: map['description'] as String?,
+  );
 
-    if (subjectId.trim().isEmpty) {
-      throw ArgumentError('Matéria é obrigatória.');
-    }
-  }
-
-  factory Task.fromMap(Map<String, dynamic> map) {
-    return Task (
-      id: map['id'] as String,
-    );
-  }
+  Map<String, dynamic> toMap() => {
+    if (id != null) 'id': id,
+    'title': title,
+    'regularity': regularity.name,
+    'targetDate': targetDate.toIso8601String(),
+    'tagId': tagId,
+    'subjectId': subjectId,
+    'reminderId': reminderId,
+    'description': description,
+  };
 
   // Getters
 
-  //   String get labelType => type.label;
+  bool get hasDescription => description != null && description!.isNotEmpty; 
 
-  //   int get remainingDays => currentDate.difference(DateTime.now()).inDays;
+  int get remainingDays => targetDate.difference(DateTime.now()).inDays;
 
-  //   // Business Rules
+  DateTime get normalizedDate =>
+      DateTime(targetDate.year, targetDate.month, targetDate.day);
 
-  //   DateTime get normalizedDate =>
-  //       DateTime(currentDate.year, currentDate.month, currentDate.day);
-
-  //   void remarkDate(DateTime newDate) => currentDate = newDate;
-
-  //   String formattedDate(DateTime date) =>
-  //       '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  String get formattedDate =>
+      '${targetDate.day.toString().padLeft(2, '0')}/${targetDate.month.toString().padLeft(2, '0')}/${targetDate.year}';
 }

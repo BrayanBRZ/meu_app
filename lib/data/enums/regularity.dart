@@ -1,0 +1,1 @@
+enum Regularity { single, daily, weekly, monthly, annual}
