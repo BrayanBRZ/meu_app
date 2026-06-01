@@ -5,15 +5,27 @@ class Seeders {
 
   static const List<String> initialInserts = [
     '''
-      INSERT INTO reminder(id, regularity, regular_time, remind_before, is_active)
+      INSERT OR IGNORE INTO reminder(
+        id,
+        regularity,
+        regular_time,
+        remind_before,
+        is_active
+      )
       VALUES(1, 'single', '1970-01-01T12:00:00.000', 30, 1)
     ''',
     '''
-      INSERT INTO reminder(id, regularity, regular_time, remind_before, is_active)
+      INSERT OR IGNORE INTO reminder(
+        id,
+        regularity,
+        regular_time,
+        remind_before,
+        is_active
+      )
       VALUES(2, 'single', '1970-01-01T12:00:00.000', 30, 1)
     ''',
     '''
-      INSERT INTO tag(id, title, color, reminder_id, is_default)
+      INSERT OR IGNORE INTO tag(id, title, color, reminder_id, is_default)
       VALUES(
         ${DefaultTags.commonId},
         '${DefaultTags.commonTitle}',
@@ -23,7 +35,7 @@ class Seeders {
       )
     ''',
     '''
-      INSERT INTO tag(id, title, color, reminder_id, is_default)
+      INSERT OR IGNORE INTO tag(id, title, color, reminder_id, is_default)
       VALUES(
         ${DefaultTags.urgentId},
         '${DefaultTags.urgentTitle}',

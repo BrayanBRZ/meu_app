@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:meu_app/data/models/tag.dart';
 import 'package:meu_app/data/models/task.dart';
 import 'package:meu_app/shared/widgets/floating_card.dart';
 
 class TaskCard extends StatelessWidget {
   final List<Task> tasks;
+  final Map<int, Tag> tagsById;
 
-  const TaskCard({super.key, required this.tasks});
+  const TaskCard({
+    super.key,
+    required this.tasks,
+    this.tagsById = const {},
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +41,7 @@ class TaskCard extends StatelessWidget {
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   final task = tasks[index];
+                  final tag = tagsById[task.tagId];
                   final today = DateTime.now();
                   final daysLeft = task.normalizedDate
                       .difference(DateTime(today.year, today.month, today.day))
@@ -44,7 +51,7 @@ class TaskCard extends StatelessWidget {
                   final Color labelColor;
                   if (daysLeft < 0) {
                     daysLabel =
-                        'Vencida há ${daysLeft.abs()} dia${daysLeft.abs() == 1 ? '' : 's'}';
+                        'Vencida ha ${daysLeft.abs()} dia${daysLeft.abs() == 1 ? '' : 's'}';
                     labelColor = Colors.red.shade400;
                   } else if (daysLeft == 0) {
                     daysLabel = 'Vence hoje';
@@ -63,7 +70,7 @@ class TaskCard extends StatelessWidget {
                     ),
                     child: FloatingCard(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      height: MediaQuery.of(context).size.width * 0.16,
+                      height: MediaQuery.of(context).size.width * 0.18,
                       child: GestureDetector(
                         onTap: () => Navigator.pushNamed(
                           context,
@@ -75,25 +82,42 @@ class TaskCard extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
-                                color: const Color(0xFFE1BEE7),
+                                color: (tag?.color ?? Colors.purple)
+                                    .withValues(alpha: 0.18),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Icon(
-                                task.type.symbol,
-                                color: const Color(0xFF9C27B0),
+                                Icons.assignment_outlined,
+                                color: tag?.color ?? const Color(0xFF9C27B0),
                                 size: 20,
                               ),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
-                              child: Text(
-                                task.title,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    task.title,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 1,
+                                  ),
+                                  if (tag != null)
+                                    Text(
+                                      tag.title,
+                                      style: const TextStyle(
+                                        color: Colors.black45,
+                                        fontSize: 12,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 1,
+                                    ),
+                                ],
                               ),
                             ),
                             const SizedBox(width: 8),

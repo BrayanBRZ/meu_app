@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:meu_app/data/models/subject.dart';
+import 'package:meu_app/services/subject_service.dart';
 import 'package:meu_app/shared/widgets/bottom_nav.dart';
 import 'package:meu_app/shared/widgets/floating_card.dart';
 import 'package:meu_app/shared/widgets/top_bar.dart';
-
-class _Subject {
-  final String name;
-  final String teacher;
-  final IconData icon;
-  _Subject(this.name, this.teacher, this.icon);
-}
 
 class SubjectScreen extends StatefulWidget {
   const SubjectScreen({super.key});
@@ -18,13 +13,26 @@ class SubjectScreen extends StatefulWidget {
 }
 
 class SubjectScreenState extends State<SubjectScreen> {
-  final List<_Subject> _subjects = [
-    _Subject('Cálculo I', 'Prof. Rodrigo Maia', Icons.functions_outlined),
-    _Subject('Física II', 'Prof. Ana Carvalho', Icons.bolt_outlined),
-    _Subject('Estrutura de Dados', 'Prof. Leandro Souza', Icons.account_tree_outlined),
-    _Subject('Álgebra Linear', 'Prof. Mariana Fonseca', Icons.grid_on_outlined),
-    _Subject('Programação OO', 'Prof. Carlos Lima', Icons.code_outlined),
-  ];
+  final _subjectService = SubjectService();
+  late Future<List<Subject>> _future;
+
+  @override
+  void initState() {
+    super.initState();
+    _future = _subjectService.findAll();
+  }
+
+  void _reload() {
+    setState(() => _future = _subjectService.findAll());
+  }
+
+  Future<void> _delete(Subject subject) async {
+    final id = subject.id;
+    if (id == null) return;
+
+    await _subjectService.delete(id);
+    _reload();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,89 +43,84 @@ class SubjectScreenState extends State<SubjectScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            TopBar(screenName: 'Matérias'),
+            const TopBar(screenName: 'Materias'),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: FloatingCard(
                   child: Column(
                     children: [
                       Expanded(
-                        child: ListView.separated(
-                          padding: const EdgeInsets.only(
-                              top: 12, bottom: 0),
-                          itemCount: _subjects.length,
-                          separatorBuilder: (_, _) => const Divider(
-                            height: 1,
-                            indent: 64,
-                            endIndent: 16,
-                            color: Color(0xFFEEEEEE),
-                          ),
-                          itemBuilder: (context, index) {
-                            final subject = _subjects[index];
-                            return ListTile(
-                              leading: Container(
-                                width: 42,
-                                height: 42,
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.circular(12),
-                                ),
-                                child: Icon(subject.icon, size: 22),
+                        child: FutureBuilder<List<Subject>>(
+                          future: _future,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState !=
+                                ConnectionState.done) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+
+                            final subjects = snapshot.data ?? const <Subject>[];
+                            if (subjects.isEmpty) {
+                              return const Center(
+                                child: Text('Nenhuma materia cadastrada.'),
+                              );
+                            }
+
+                            return ListView.separated(
+                              padding: const EdgeInsets.only(top: 12),
+                              itemCount: subjects.length,
+                              separatorBuilder: (_, _) => const Divider(
+                                height: 1,
+                                indent: 64,
+                                endIndent: 16,
+                                color: Color(0xFFEEEEEE),
                               ),
-                              title: Text(
-                                subject.name,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
-                                ),
-                              ),
-                              subtitle: Text(
-                                subject.teacher,
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black45),
-                              ),
-                              trailing: const Icon(
-                                  Icons.chevron_right,
-                                  color: Colors.black26),
+                              itemBuilder: (context, index) {
+                                final subject = subjects[index];
+                                return ListTile(
+                                  leading: const Icon(Icons.menu_book_rounded),
+                                  title: Text(
+                                    subject.title,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  trailing: IconButton(
+                                    icon: const Icon(Icons.delete_outline),
+                                    onPressed: () => _delete(subject),
+                                  ),
+                                );
+                              },
                             );
                           },
                         ),
                       ),
-                      // ── Adicionar Matéria ────────────────────────
                       Padding(
                         padding: const EdgeInsets.all(12),
                         child: GestureDetector(
-                          onTap: () => Navigator.pushNamed(
-                              context, '/subject/add'),
+                          onTap: () async {
+                            await Navigator.pushNamed(context, '/subject/add');
+                            _reload();
+                          },
                           child: Container(
                             height: w * 0.14,
                             decoration: BoxDecoration(
                               color: const Color(0xFF9C27B0),
                               borderRadius: BorderRadius.circular(16),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.purple.withValues(alpha: 0.3),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
                             ),
                             child: const Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.add_rounded,
-                                    color: Colors.white, size: 22),
+                                Icon(Icons.add_rounded, color: Colors.white),
                                 SizedBox(width: 8),
                                 Text(
-                                  'Adicionar Matéria',
+                                  'Adicionar Materia',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 15,
                                   ),
                                 ),
                               ],
@@ -133,7 +136,7 @@ class SubjectScreenState extends State<SubjectScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNav(currentIndex: 2),
+      bottomNavigationBar: const BottomNav(currentIndex: 2),
     );
   }
 }

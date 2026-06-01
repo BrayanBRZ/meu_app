@@ -8,26 +8,31 @@ import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 class Connection {
   Connection._();
 
-  // Verificar race condition futuramente
   static final Connection instance = Connection._();
 
   static const String _databaseName = 'app_database.db';
+  static const String _databaseNameWeb = 'app_database_web.db';
   static const int _databaseVersion = 1;
 
   Database? _database;
 
   Future<Database> get database async {
-    if (_database != null) return _database!;
+    final openedDatabase = _database;
+    if (openedDatabase != null) return openedDatabase;
 
-    _database = await _open();
-    return _database!;
+    final newDatabase = await _open();
+    _database = newDatabase;
+
+    return newDatabase;
   }
 
   Future<Database> _open() async {
-    if (kIsWeb) databaseFactory = databaseFactoryFfiWeb;
+    if (kIsWeb) {
+      databaseFactory = databaseFactoryFfiWeb;
+    }
 
     final String databasePath = kIsWeb
-        ? _databaseName
+        ? _databaseNameWeb
         : path.join(await getDatabasesPath(), _databaseName);
 
     return openDatabase(
@@ -35,6 +40,7 @@ class Connection {
       version: _databaseVersion,
       onConfigure: _onConfigure,
       onCreate: _onCreate,
+      onOpen: _ensureInitialData,
     );
   }
 
@@ -57,6 +63,12 @@ class Connection {
     }
 
     for (final sql in Schema.createTriggers) {
+      await db.execute(sql);
+    }
+  }
+
+  Future<void> _ensureInitialData(Database db) async {
+    for (final sql in Seeders.initialInserts) {
       await db.execute(sql);
     }
   }
