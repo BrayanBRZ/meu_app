@@ -1,13 +1,13 @@
 import 'package:meu_app/data/enums/regularity.dart';
 
 class Task {
-  final String? id;
+  final int? id;
   final String title;
   final Regularity regularity;
   final DateTime targetDate;
-  final String tagId;
-  final String subjectId;
-  final String? reminderId;
+  final int tagId;
+  final int subjectId;
+  final int? reminderId;
   final String? description;
 
   Task({
@@ -23,13 +23,13 @@ class Task {
        description = description?.trim();
 
   factory Task.fromMap(Map<String, dynamic> map) => Task(
-    id: map['id'] as String,
+    id: map['id'] as int?,
     title: map['title'] as String,
     regularity: Regularity.values.byName(map['regularity'] as String),
-    targetDate: DateTime.parse(map['targetDate'] as String),
-    tagId: map['tagId'] as String,
-    subjectId: map['subjectId'] as String,
-    reminderId: map['reminderId'] as String,
+    targetDate: DateTime.parse(map['target_date'] as String),
+    tagId: map['tag_id'] as int,
+    subjectId: map['subject_id'] as int,
+    reminderId: map['reminder_id'] as int?,
     description: map['description'] as String?,
   );
 
@@ -37,16 +37,16 @@ class Task {
     if (id != null) 'id': id,
     'title': title,
     'regularity': regularity.name,
-    'targetDate': targetDate.toIso8601String(),
-    'tagId': tagId,
-    'subjectId': subjectId,
-    'reminderId': reminderId,
+    'target_date': targetDate.toIso8601String(),
+    'tag_id': tagId,
+    'subject_id': subjectId,
+    'reminder_id': reminderId,
     'description': description,
   };
 
   // Getters
 
-  bool get hasDescription => description != null && description!.isNotEmpty; 
+  bool get hasDescription => description != null && description!.isNotEmpty;
 
   int get remainingDays => targetDate.difference(DateTime.now()).inDays;
 
