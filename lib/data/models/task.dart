@@ -1,3 +1,4 @@
+import 'package:meu_app/data/constants/default_tags.dart';
 import 'package:meu_app/data/enums/regularity.dart';
 
 class Task {
@@ -6,7 +7,7 @@ class Task {
   final Regularity regularity;
   final DateTime targetDate;
   final int tagId;
-  final int subjectId;
+  final int? subjectId;
   final int? reminderId;
   final String? description;
 
@@ -15,8 +16,8 @@ class Task {
     required String title,
     required this.regularity,
     required this.targetDate,
-    required this.tagId,
-    required this.subjectId,
+    this.tagId = DefaultTags.commonId,
+    this.subjectId,
     this.reminderId,
     String? description,
   }) : title = title.trim(),
@@ -27,8 +28,8 @@ class Task {
     title: map['title'] as String,
     regularity: Regularity.values.byName(map['regularity'] as String),
     targetDate: DateTime.parse(map['target_date'] as String),
-    tagId: map['tag_id'] as int,
-    subjectId: map['subject_id'] as int,
+    tagId: map['tag_id'] as int? ?? DefaultTags.commonId,
+    subjectId: map['subject_id'] as int?,
     reminderId: map['reminder_id'] as int?,
     description: map['description'] as String?,
   );

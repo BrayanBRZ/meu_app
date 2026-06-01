@@ -8,28 +8,71 @@ class TagDao {
 
   static const String _table = 'tag';
 
-  // essencial methods
+  Future<int> insert(Tag tag) async {
+    if (tag.reminderId == null) {
+      throw ArgumentError.value(tag, 'tag', 'reminderId is required');
+    }
 
-  Future<void> insert(Tag tag) async {
-    await _database.insert(_table, tag.toMap());
+    final values = tag.toMap()
+      ..remove('id')
+      ..['is_default'] = 0;
+
+    return _database.insert(_table, values);
   }
 
   Future<void> delete(int id) async {
+    final tag = await findById(id);
+    if (tag == null) return;
+    if (!tag.isEditable) {
+      throw StateError('Default tags cannot be deleted');
+    }
+
     await _database.delete(_table, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<void> update(Tag tag) async {
+    final id = tag.id;
+    if (id == null) {
+      throw ArgumentError.value(tag, 'tag', 'id is required');
+    }
+
+    final currentTag = await findById(id);
+    if (currentTag == null) return;
+    if (!currentTag.isEditable) {
+      throw StateError('Default tags cannot be updated');
+    }
+
+    final values = tag.toMap()
+      ..remove('id')
+      ..remove('reminder_id')
+      ..['is_default'] = 0;
+
     await _database.update(
       _table,
-      tag.toMap(),
+      values,
       where: 'id = ?',
-      whereArgs: [tag.id],
+      whereArgs: [id],
     );
   }
 
-  // query methods
+  Future<Tag?> findById(int id) async {
+    final result = await _database.query(
+      _table,
+      where: 'id = ?',
+      whereArgs: [id],
+      limit: 1,
+    );
 
-  Future<Tag> findById(int id) async {
-    
-  } 
+    if (result.isEmpty) return null;
+
+    return Tag.fromMap(result.first);
+  }
+
+  Future<List<Tag>> findAll() async {
+    final result = await _database.query(
+      _table,
+      orderBy: 'is_default DESC, title COLLATE NOCASE',
+    );
+    return result.map(Tag.fromMap).toList();
+  }
 }
